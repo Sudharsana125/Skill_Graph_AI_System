@@ -2,8 +2,6 @@
 
 <div align="center">
 
-![SkillGraph AI Dashboard](./docs/assets/dashboard.png)
-
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688.svg?style=flat&logo=FastAPI&logoColor=white)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/React-18.2+-61DAFB.svg?style=flat&logo=React&logoColor=black)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-5.2+-646CFF.svg?style=flat&logo=Vite&logoColor=white)](https://vitejs.dev)
