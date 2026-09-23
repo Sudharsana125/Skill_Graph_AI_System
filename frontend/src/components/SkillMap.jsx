@@ -1,161 +1,198 @@
 import React, { useState } from 'react';
-import { Cpu, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { Cpu, ShieldCheck, CheckCircle2, Layers, Search, Filter } from 'lucide-react';
+import InteractiveSkillGraph from './InteractiveSkillGraph';
 
-export default function SkillMap({ skills = [] }) {
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedSkill, setSelectedSkill] = useState(null);
+export default function SkillMap({ 
+  skills = [], 
+  highPriorityGaps = [], 
+  mediumPriorityGaps = [], 
+  transferableSkills = [],
+  targetRole = 'AI Engineer',
+  alignmentScore = 68
+}) {
+  const [viewMode, setViewMode] = useState('GRAPH'); // 'GRAPH' or 'MATRIX'
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
-  // Derive available categories
-  const categories = ["All", ...Array.from(new Set(skills.map(s => s.category || "General")))];
+  // Categories
+  const categories = ['All', ...Array.from(new Set(skills.map(s => s.category || 'General')))];
 
-  const filteredSkills = selectedCategory === "All" 
-    ? skills 
-    : skills.filter(s => (s.category || "General") === selectedCategory);
+  const filteredSkills = skills.filter(s => {
+    const matchCat = selectedCategory === 'All' || (s.category || 'General') === selectedCategory;
+    const matchQuery = s.name.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchCat && matchQuery;
+  });
 
   return (
-    <div className="glass-panel" style={{ padding: '28px' }}>
-      {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '22px', flexWrap: 'wrap', gap: '14px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      
+      {/* Header with Switcher */}
+      <div className="glass-panel" style={{ padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <Cpu size={19} color="var(--accent-secondary)" />
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>Verified Competency Matrix</h3>
+            <Cpu size={20} color="#38bdf8" />
+            <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#f8fafc', margin: 0 }}>
+              Verified Competency & Dependency Network
+            </h2>
           </div>
-          <p style={{ fontSize: '0.86rem', color: 'var(--text-muted)' }}>
-            Digital inventory of your verified technical competencies, evidence trails, and confidence levels.
+          <p style={{ fontSize: '0.84rem', color: '#94a3b8', margin: 0 }}>
+            Visual topological representation of verified capabilities, dependency chains, and benchmark gaps for <strong style={{ color: '#ffffff' }}>{targetRole}</strong>.
           </p>
         </div>
 
-        {/* Category Filter Pills */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-          {categories.map(cat => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              style={{
-                padding: '6px 13px',
-                borderRadius: 'var(--radius-full)',
-                fontSize: '0.78rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-                background: selectedCategory === cat ? 'var(--gradient-brand)' : 'rgba(255, 255, 255, 0.04)',
-                color: selectedCategory === cat ? '#ffffff' : 'var(--text-muted)',
-                border: selectedCategory === cat ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid var(--card-border)',
-                transition: 'all var(--transition-fast)'
-              }}
-            >
-              {cat}
-            </button>
-          ))}
+        {/* View Toggle */}
+        <div style={{ display: 'flex', background: 'rgba(0, 0, 0, 0.3)', padding: '3px', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+          <button
+            onClick={() => setViewMode('GRAPH')}
+            style={{
+              padding: '6px 14px',
+              borderRadius: '6px',
+              background: viewMode === 'GRAPH' ? 'rgba(56, 189, 248, 0.15)' : 'transparent',
+              color: viewMode === 'GRAPH' ? '#38bdf8' : '#94a3b8',
+              border: viewMode === 'GRAPH' ? '1px solid rgba(56, 189, 248, 0.4)' : 'none',
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              cursor: 'pointer'
+            }}
+          >
+            Interactive Graph
+          </button>
+          <button
+            onClick={() => setViewMode('MATRIX')}
+            style={{
+              padding: '6px 14px',
+              borderRadius: '6px',
+              background: viewMode === 'MATRIX' ? 'rgba(56, 189, 248, 0.15)' : 'transparent',
+              color: viewMode === 'MATRIX' ? '#38bdf8' : '#94a3b8',
+              border: viewMode === 'MATRIX' ? '1px solid rgba(56, 189, 248, 0.4)' : 'none',
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              cursor: 'pointer'
+            }}
+          >
+            Tabular Matrix
+          </button>
         </div>
       </div>
 
-      {/* Skill Cards Grid */}
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', 
-        gap: '16px' 
-      }}>
-        {filteredSkills.map((skill, idx) => {
-          const confidencePercent = Math.round((skill.confidence || 0.5) * 100);
-          const isSelected = selectedSkill && selectedSkill.name === skill.name;
+      {/* VIEW 1: INTERACTIVE SKILLGRAPH */}
+      {viewMode === 'GRAPH' && (
+        <InteractiveSkillGraph 
+          skills={skills}
+          highPriorityGaps={highPriorityGaps}
+          mediumPriorityGaps={mediumPriorityGaps}
+          transferableSkills={transferableSkills}
+          targetRole={targetRole}
+          alignmentScore={alignmentScore}
+        />
+      )}
 
-          return (
-            <div
-              key={idx}
-              onClick={() => setSelectedSkill(isSelected ? null : skill)}
-              className="card-interactive"
-              style={{
-                padding: '18px 20px',
-                cursor: 'pointer',
-                borderRadius: 'var(--radius-md)',
-                border: isSelected ? '1px solid var(--accent-secondary)' : '1px solid var(--card-border)',
-                background: isSelected ? 'rgba(6, 182, 212, 0.08)' : 'rgba(255, 255, 255, 0.02)',
-                position: 'relative',
-                boxShadow: isSelected ? '0 0 20px -3px rgba(6, 182, 212, 0.25)' : 'none'
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
-                <div>
-                  <h4 style={{ fontSize: '1.02rem', fontWeight: 700, color: '#ffffff' }}>{skill.name}</h4>
-                  <span style={{ fontSize: '0.74rem', color: 'var(--text-dim)' }}>{skill.category}</span>
-                </div>
-                <span className={`badge ${
-                  skill.level === 'Advanced' ? 'badge-strong' : (skill.level === 'Intermediate' ? 'badge-cyan' : 'badge-indigo')
-                }`}>
-                  {skill.level}
-                </span>
-              </div>
-
-              {/* Confidence Progress Bar */}
-              <div style={{ marginBottom: '12px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.74rem', color: 'var(--text-muted)', marginBottom: '5px' }}>
-                  <span>Verified Confidence</span>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 600 }}>{confidencePercent}%</span>
-                </div>
-                <div className="progress-bar-container" style={{ height: '6px' }}>
-                  <div 
-                    className="progress-bar-fill" 
-                    style={{ 
-                      width: `${confidencePercent}%`,
-                      background: confidencePercent >= 75 ? 'linear-gradient(90deg, #06b6d4, #10b981)' : 'var(--gradient-brand)'
-                    }} 
-                  />
-                </div>
-              </div>
-
-              {/* Evidence Snippet preview */}
-              {skill.evidence && skill.evidence.length > 0 && (
-                <div style={{ 
-                  fontSize: '0.76rem', 
-                  color: 'var(--text-secondary)', 
-                  background: 'rgba(0, 0, 0, 0.25)', 
-                  padding: '7px 10px', 
-                  borderRadius: 'var(--radius-sm)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  border: '1px solid rgba(255, 255, 255, 0.04)'
-                }}>
-                  <ShieldCheck size={14} color="var(--accent-emerald)" />
-                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {skill.evidence[0]}
-                  </span>
-                </div>
-              )}
+      {/* VIEW 2: TABULAR / CARD MATRIX */}
+      {viewMode === 'MATRIX' && (
+        <div className="glass-panel" style={{ padding: '24px' }}>
+          {/* Controls */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+              {categories.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  style={{
+                    padding: '5px 12px',
+                    borderRadius: '6px',
+                    fontSize: '0.78rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    background: selectedCategory === cat ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255, 255, 255, 0.03)',
+                    color: selectedCategory === cat ? '#38bdf8' : '#94a3b8',
+                    border: selectedCategory === cat ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.08)'
+                  }}
+                >
+                  {cat}
+                </button>
+              ))}
             </div>
-          );
-        })}
-      </div>
 
-      {/* Selected Skill Evidence Drawer */}
-      {selectedSkill && (
-        <div style={{
-          marginTop: '22px',
-          padding: '20px 24px',
-          background: 'rgba(6, 182, 212, 0.05)',
-          border: '1px solid rgba(6, 182, 212, 0.25)',
-          borderRadius: 'var(--radius-md)'
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
-            <h4 style={{ fontSize: '1.05rem', color: 'var(--accent-secondary)', fontWeight: 700 }}>
-              Evidence Breakdown: {selectedSkill.name}
-            </h4>
-            <span style={{ fontSize: '0.76rem', color: 'var(--text-dim)' }}>
-              Derived from verified project implementations & course credentials
-            </span>
+            <div style={{ position: 'relative', width: '220px' }}>
+              <Search size={14} color="#94a3b8" style={{ position: 'absolute', left: '10px', top: '10px' }} />
+              <input 
+                type="text"
+                placeholder="Search skills..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '7px 12px 7px 32px',
+                  borderRadius: '6px',
+                  background: 'rgba(0, 0, 0, 0.3)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  color: '#ffffff',
+                  fontSize: '0.82rem'
+                }}
+              />
+            </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {selectedSkill.evidence && selectedSkill.evidence.map((ev, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.84rem', color: 'var(--text-secondary)' }}>
-                <CheckCircle2 size={15} color="var(--accent-emerald)" />
-                <span>{ev}</span>
-              </div>
-            ))}
+          {/* Cards Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '14px' }}>
+            {filteredSkills.map((skill, idx) => {
+              const confidence = Math.round((skill.confidence || 0.8) * 100);
+
+              return (
+                <div 
+                  key={idx}
+                  style={{
+                    padding: '16px 18px',
+                    borderRadius: '10px',
+                    background: 'rgba(255, 255, 255, 0.02)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                    <div>
+                      <h4 style={{ fontSize: '0.98rem', fontWeight: 700, color: '#ffffff', margin: '0 0 2px 0' }}>
+                        {skill.name}
+                      </h4>
+                      <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                        {skill.category || 'Engineering'}
+                      </span>
+                    </div>
+                    <span style={{
+                      fontSize: '0.72rem',
+                      fontWeight: 600,
+                      padding: '2px 8px',
+                      borderRadius: '4px',
+                      background: skill.level === 'Advanced' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(56, 189, 248, 0.15)',
+                      color: skill.level === 'Advanced' ? '#34d399' : '#38bdf8'
+                    }}>
+                      {skill.level}
+                    </span>
+                  </div>
+
+                  <div style={{ marginBottom: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: '#94a3b8', marginBottom: '4px' }}>
+                      <span>Evaluated Confidence</span>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 600 }}>{confidence}%</span>
+                    </div>
+                    <div className="progress-bar-container" style={{ height: '5px' }}>
+                      <div 
+                        className="progress-bar-fill" 
+                        style={{ width: `${confidence}%`, background: '#10b981' }} 
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ fontSize: '0.72rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <CheckCircle2 size={12} />
+                    <span>Evidence-verified in repository / assessment</span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
+
     </div>
   );
 }

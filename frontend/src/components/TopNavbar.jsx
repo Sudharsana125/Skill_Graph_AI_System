@@ -1,50 +1,56 @@
 import React from 'react';
-import { Search, Sparkles, Bell, Brain } from 'lucide-react';
+import { Search, Sparkles, Bell, Brain, PlusCircle, Home, GitBranch } from 'lucide-react';
+import ThemeSelector from './ThemeSelector';
 
 export default function TopNavbar({ 
   onOpenAssistant, 
   onOpenSearch, 
   onProfileClick,
-  userName = "Sudharsana",
+  onGoHome,
+  onNewProfile,
+  userName = "Emerging Engineer",
   userRole = "Student"
 }) {
+  const displayInitial = (userName && userName.length > 0) ? userName.charAt(0).toUpperCase() : "U";
+
   return (
     <header className="skillgraph-topbar">
-      {/* Brand Logo matching user screenshot */}
+      {/* Brand Logo & Home Navigation */}
       <div 
         style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}
-        onClick={() => window.location.reload()}
+        onClick={onGoHome || (() => window.location.reload())}
         id="topbar-logo"
+        title="SkillGraph AI Home"
       >
         <div style={{
           width: '38px',
           height: '38px',
           borderRadius: '11px',
-          background: 'linear-gradient(135deg, #818cf8 0%, #38bdf8 100%)',
+          background: 'linear-gradient(135deg, var(--accent-violet) 0%, var(--accent-cyan) 100%)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          boxShadow: '0 0 20px rgba(129, 140, 248, 0.45)',
+          boxShadow: '0 0 20px rgba(139, 92, 246, 0.45)',
           border: '1px solid rgba(255, 255, 255, 0.25)'
         }}>
-          <Brain size={22} color="#ffffff" strokeWidth={2.2} />
+          <GitBranch size={20} color="#ffffff" strokeWidth={2.4} />
         </div>
         <div>
-          <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em', lineHeight: 1.1 }}>
-            SkillGraph AI
+          <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em', lineHeight: 1.1 }}>
+            Skill<span className="text-gradient">Graph AI</span>
           </div>
-          <div style={{ fontSize: '0.72rem', color: '#94a3b8', letterSpacing: '0.02em' }}>
-            From Skills to Opportunities
+          <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', letterSpacing: '0.02em' }}>
+            Career Intelligence Platform
           </div>
         </div>
       </div>
 
-      {/* Global Interactive Search Input */}
+      {/* Global Interactive AI Command Bar */}
       <div className="search-input-pill" onClick={onOpenSearch} id="global-search-pill">
-        <Search size={16} color="#38bdf8" />
+        <Search size={16} color="var(--accent-cyan)" />
         <input 
           type="text" 
-          placeholder='Ask SkillGraph AI anything... (e.g., "What skills do I need for a Data Scientist?")'
+          placeholder='Ask SkillGraph... (e.g. "What skills am I missing for AI Engineer?")'
           readOnly
           style={{ cursor: 'pointer' }}
         />
@@ -52,69 +58,60 @@ export default function TopNavbar({
       </div>
 
       {/* Right Controls */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-        {/* ✨ AI Assistant Button */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        {/* Dynamic Hackathon Theme Selector */}
+        <ThemeSelector />
+        
+        {/* Create / Rebuild Profile Button */}
+        {onNewProfile && (
+          <button
+            onClick={onNewProfile}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              color: '#cbd5e1',
+              borderRadius: '9999px',
+              padding: '6px 14px',
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.18s'
+            }}
+            title="Create New Profile"
+          >
+            <PlusCircle size={14} color="#38bdf8" />
+            <span>New Profile</span>
+          </button>
+        )}
+
+        {/* AI Assistant Button */}
         <button
           onClick={onOpenAssistant}
           style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: '8px',
-            background: 'rgba(59, 130, 246, 0.15)',
-            border: '1px solid rgba(99, 102, 241, 0.45)',
-            color: '#93c5fd',
+            background: 'rgba(56, 189, 248, 0.12)',
+            border: '1px solid rgba(56, 189, 248, 0.35)',
+            color: '#38bdf8',
             borderRadius: '9999px',
             padding: '7px 16px',
             fontSize: '0.84rem',
             fontWeight: 600,
             cursor: 'pointer',
             transition: 'all 0.2s ease',
-            boxShadow: '0 0 16px rgba(59, 130, 246, 0.2)'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(59, 130, 246, 0.28)';
-            e.currentTarget.style.borderColor = '#60a5fa';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(59, 130, 246, 0.15)';
-            e.currentTarget.style.borderColor = 'rgba(99, 102, 241, 0.45)';
+            boxShadow: '0 0 16px rgba(56, 189, 248, 0.15)'
           }}
           id="topbar-assistant-btn"
         >
           <Sparkles size={15} color="#38bdf8" />
-          <span>AI Assistant</span>
+          <span>Ask SkillGraph</span>
         </button>
 
-        {/* Notification Bell */}
-        <div 
-          style={{ 
-            position: 'relative', 
-            width: '36px', 
-            height: '36px', 
-            borderRadius: '10px', 
-            background: 'rgba(255, 255, 255, 0.04)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer'
-          }}
-          title="3 Unread Skill & Career Alerts"
-        >
-          <Bell size={17} color="#cbd5e1" />
-          <span style={{
-            position: 'absolute',
-            top: '7px',
-            right: '8px',
-            width: '7px',
-            height: '7px',
-            borderRadius: '50%',
-            background: '#38bdf8',
-            boxShadow: '0 0 8px #38bdf8'
-          }} />
-        </div>
-
-        {/* User Profile Avatar */}
+        {/* User Profile Avatar with Real Dynamic Name */}
         <div 
           onClick={onProfileClick}
           style={{ 
@@ -133,7 +130,7 @@ export default function TopNavbar({
             width: '36px',
             height: '36px',
             borderRadius: '50%',
-            background: 'linear-gradient(135deg, #6366f1 0%, #38bdf8 100%)',
+            background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -141,9 +138,9 @@ export default function TopNavbar({
             fontWeight: 700,
             fontSize: '0.95rem',
             border: '1px solid rgba(255, 255, 255, 0.3)',
-            boxShadow: '0 0 12px rgba(99, 102, 241, 0.4)'
+            boxShadow: '0 0 14px rgba(59, 130, 246, 0.35)'
           }}>
-            {userName.charAt(0)}
+            {displayInitial}
           </div>
           <div>
             <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#f8fafc', lineHeight: 1.1 }}>

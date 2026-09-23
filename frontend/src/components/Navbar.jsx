@@ -1,97 +1,69 @@
 import React from 'react';
-import { Cpu, ArrowRight, Play, Zap, Activity } from 'lucide-react';
+import { ArrowRight, Play, Zap, Sparkles, GitBranch } from 'lucide-react';
+import ThemeSelector from './ThemeSelector';
 
 export default function Navbar({ onStartOnboarding, onTryDemo, onGoHome, currentView }) {
   return (
-    <header style={{
-      position: 'sticky',
-      top: 0,
-      zIndex: 50,
-      backdropFilter: 'blur(20px)',
-      WebkitBackdropFilter: 'blur(20px)',
-      background: 'rgba(7, 9, 14, 0.88)',
-      borderBottom: '1px solid var(--card-border)',
-      padding: '12px 0'
-    }}>
-      <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <header className="skillgraph-topbar glass-panel-glow">
+      <div className="container flex flex-wrap items-center justify-between gap-4">
         {/* Brand Logo */}
-        <div 
-          onClick={onGoHome} 
-          style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', userSelect: 'none' }}
-          id="nav-brand-logo"
-        >
-          <div style={{
-            width: '36px',
-            height: '36px',
-            borderRadius: '10px',
-            background: 'linear-gradient(135deg, #2563eb, #0284c7)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 0 18px rgba(37, 99, 235, 0.4)',
-            border: '1px solid rgba(255, 255, 255, 0.2)'
-          }}>
-            <Cpu size={18} color="#ffffff" />
+        <a onClick={onGoHome} className="brand-logo flex items-center gap-3 cursor-pointer" aria-label="Go home">
+          <div className="logo-icon"
+            style={{
+              width: '38px',
+              height: '38px',
+              borderRadius: '11px',
+              background: 'linear-gradient(135deg, var(--accent-violet) 0%, var(--accent-cyan) 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 0 20px rgba(139, 92, 246, 0.45)',
+              border: '1px solid rgba(255, 255, 255, 0.25)',
+              transition: 'transform 0.2s ease',
+            }}
+          >
+            <GitBranch size={20} color="#ffffff" strokeWidth={2.4} />
           </div>
-          <div>
+          <div className="logo-text flex flex-col">
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '1.2rem', fontWeight: 800, fontFamily: 'var(--font-heading)', letterSpacing: '-0.02em', color: '#ffffff' }}>
-                Skill<span className="text-gradient">Twin</span>
+              <span style={{ fontSize: '1.25rem', fontWeight: 800, fontFamily: 'var(--font-heading)', letterSpacing: '-0.02em', color: '#ffffff' }}>
+                Skill<span className="text-gradient">Graph AI</span>
               </span>
-              <span className="badge badge-indigo" style={{ fontSize: '0.64rem', padding: '2px 6px' }}>PRO</span>
+              <span className="badge badge-cyan" style={{ fontSize: '0.66rem', padding: '2px 8px' }}>PLATFORM</span>
             </div>
           </div>
-        </div>
+        </a>
 
         {/* Center Live Engine Indicator */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          padding: '4px 12px',
-          borderRadius: 'var(--radius-full)',
-          background: 'rgba(255, 255, 255, 0.03)',
-          border: '1px solid var(--card-border)',
-          fontSize: '0.74rem',
-          color: 'var(--text-secondary)'
-        }}>
-          <span className="live-pulse"></span>
-          <span style={{ fontWeight: 600, color: '#34d399', letterSpacing: '0.04em' }}>LIVE ENGINE</span>
+        <div className="live-engine flex items-center gap-2 px-4 py-1 rounded-full bg-opacity-5 border border-opacity-10 text-sm text-muted"
+          style={{
+            background: 'rgba(255, 255, 255, 0.03)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+          }}
+        >
+          <span className="live-pulse-amber" />
+          <span style={{ fontWeight: 700, color: '#34d399', letterSpacing: '0.04em' }}>CAREER OPERATING SYSTEM</span>
           <span style={{ color: 'var(--text-dim)' }}>•</span>
-          <span style={{ color: 'var(--text-muted)' }}>Real-Time Recalibration</span>
+          <span style={{ color: 'var(--text-muted)' }}>Evidence‑Backed Analysis</span>
         </div>
 
         {/* Actions */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div className="flex items-center gap-3">
+          <ThemeSelector />
           {currentView !== 'landing' && (
-            <button 
-              onClick={onGoHome}
-              className="btn-secondary" 
-              style={{ padding: '8px 14px', fontSize: '0.82rem' }}
-              id="nav-home-btn"
-            >
-              Overview
+            <button onClick={onGoHome} className="btn-secondary" aria-label="Landing page" style={{ padding: '8px 14px', fontSize: '0.82rem' }}>
+              Landing Page
             </button>
           )}
-
-          <button 
-            onClick={onTryDemo}
-            className="btn-demo"
-            id="nav-try-demo-btn"
-            title="Explore Interactive Career Twin Demo"
-            style={{ padding: '8px 16px', fontSize: '0.82rem' }}
-          >
+          <button onClick={onTryDemo} className="btn-demo" aria-label="Sample profile"
+            style={{ padding: '8px 16px', fontSize: '0.82rem' }}>
             <Play size={13} fill="currentColor" />
-            <span>Interactive Demo</span>
+            <span>Sample Profile</span>
           </button>
-
-          <button 
-            onClick={onStartOnboarding}
-            className="btn-primary" 
-            style={{ padding: '8px 16px', fontSize: '0.82rem' }}
-            id="nav-build-twin-btn"
-          >
-            <span>Assess Profile</span>
+          <button onClick={onStartOnboarding} className="btn-primary" aria-label="Build SkillGraph"
+            style={{ padding: '8px 18px', fontSize: '0.82rem' }}>
+            <Sparkles size={14} />
+            <span>Build SkillGraph</span>
             <ArrowRight size={14} />
           </button>
         </div>

@@ -25,9 +25,13 @@ export default function Dashboard({
   onRefreshDashboard,
   isUpdatingProgress,
   onResetToDemo,
-  onNewProfile 
+  onNewProfile,
+  onClearProfile,
+  onGoHome,
+  onLiveSwitchRole,
+  onLiveAddSkill
 }) {
-  const [activeNav, setActiveNav] = useState('overview'); // 'overview', 'twin', 'explorer', 'learning', etc.
+  const [activeNav, setActiveNav] = useState('overview');
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [isGoalEditorOpen, setIsGoalEditorOpen] = useState(false);
@@ -45,23 +49,34 @@ export default function Dashboard({
       await onToggleTask(data.next_best_move.task_id, true);
       showToast("Next move marked as completed! Alignment recalibrated.");
     } else {
-      showToast("RAG Chatbot project action deliverable submitted for review!");
+      // Local progression
+      showToast("High-impact sprint marked complete! Recalibrating readiness score.");
+      if (data.roadmap && data.roadmap[0]) {
+        await onToggleTask(data.roadmap[0].id, true);
+      }
     }
   };
 
-  const handleSaveGoals = ({ targetRole, weeklyHours, timelineMonths }) => {
-    showToast(`Goals recalibrated: ${targetRole} • ${weeklyHours}h/wk • ${timelineMonths}M target`);
+  const handleSaveGoals = async ({ targetRole, weeklyHours, timelineMonths }) => {
+    setIsGoalEditorOpen(false);
+    showToast(`Recalibrating target ambition for: ${targetRole}...`);
+    if (onLiveSwitchRole && targetRole !== data.target_role) {
+      await onLiveSwitchRole(targetRole);
+      showToast(`Profile dynamically recalibrated for ${targetRole}!`);
+    }
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#07090e', color: '#f8fafc', display: 'flex', flexDirection: 'column' }}>
-      {/* Top Navbar matching screenshot */}
+    <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', color: '#f8fafc', display: 'flex', flexDirection: 'column' }}>
+      {/* Top Navbar with Dynamic User Information */}
       <TopNavbar
-        userName={data.name || "Sudharsana"}
+        userName={data.name || "Real-Time Engineer"}
         userRole={data.status || "Student"}
         onOpenAssistant={() => setIsAssistantOpen(true)}
         onOpenSearch={() => setIsCommandPaletteOpen(true)}
         onProfileClick={() => setActiveNav('twin')}
+        onGoHome={onGoHome}
+        onNewProfile={onNewProfile}
       />
 
       {/* Main Shell: Sidebar + Cockpit Content */}
@@ -92,12 +107,12 @@ export default function Dashboard({
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span className="live-pulse"></span>
-                <span style={{ fontSize: '0.78rem', color: '#34d399', fontWeight: 600 }}>LIVE CALIBRATED</span>
+                <span style={{ fontSize: '0.78rem', color: '#34d399', fontWeight: 700 }}>LIVE AGENT RECALIBRATION</span>
               </div>
             </div>
           )}
 
-          {/* 1. OVERVIEW (EXACT USER SCREENSHOT) */}
+          {/* 1. OVERVIEW */}
           {activeNav === 'overview' && (
             <OverviewCockpit
               data={data}
@@ -206,17 +221,26 @@ export default function Dashboard({
           {/* 12. SETTINGS */}
           {activeNav === 'settings' && (
             <div className="glass-panel" style={{ padding: '30px', maxWidth: '640px' }}>
-              <h2 style={{ fontSize: '1.25rem', marginBottom: '14px' }}>Profile & Simulation Preferences</h2>
-              <p style={{ color: '#94a3b8', fontSize: '0.88rem', marginBottom: '20px' }}>
-                Re-assess your baseline skill matrix or adjust career target configurations.
+              <h2 style={{ fontSize: '1.25rem', marginBottom: '8px', color: '#ffffff' }}>Profile & Simulation Preferences</h2>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', marginBottom: '24px' }}>
+                Re-assess your baseline skill matrix, launch the onboarding wizard, or inspect the clean empty state.
               </p>
-              <div style={{ display: 'flex', gap: '12px' }}>
+              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                 <button onClick={onNewProfile} className="btn-primary">
-                  Assess New Profile
+                  Build New SkillGraph
                 </button>
-                <button onClick={onResetToDemo} className="btn-secondary">
-                  Reset to Default Demo
+                <button onClick={onResetToDemo} className="btn-demo">
+                  Load Controlled Demo Profile
                 </button>
+                {onClearProfile && (
+                  <button 
+                    onClick={onClearProfile} 
+                    className="btn-secondary"
+                    style={{ borderColor: 'rgba(244, 63, 94, 0.4)', color: '#fda4af' }}
+                  >
+                    Reset to Empty State
+                  </button>
+                )}
               </div>
             </div>
           )}

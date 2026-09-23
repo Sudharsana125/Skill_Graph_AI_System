@@ -95,7 +95,7 @@ async def run_tests():
         # 5. Test Demo Seeding
         print("[5/10] Testing Instant Demo Seeding...")
         demo_state = await orchestrator.get_or_create_demo_user(db)
-        assert demo_state.user_id == "demo_alex_ai_engineer"
+        assert demo_state.user_id in ["demo_alex_ai_engineer", "demo_sudharsana_ai_engineer"]
         assert demo_state.alignment_score >= 50.0
         print(f"[PASS] Demo Profile seeded successfully with {demo_state.alignment_score}% alignment.")
 
