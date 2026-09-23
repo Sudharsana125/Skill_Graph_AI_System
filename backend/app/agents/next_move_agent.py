@@ -53,18 +53,18 @@ class NextMoveAgent:
         # 2. If all roadmap tasks are completed or none exist, look at highest gap
         if high_gaps:
             first_gap = high_gaps[0]
-            gap_name = getattr(first_gap, 'skill_name', 'Docker')
+            gap_name = getattr(first_gap, 'skill_name', None) or getattr(first_gap, 'name', None) or f"{target_role} Core Competency"
             return NextBestMove(
                 task_id=None,
                 action_type="project_build",
-                title=f"Build Capstone Deliverable for {gap_name}",
+                title=f"Build High-Impact Project for {gap_name}",
                 target_skill=gap_name,
-                why_now=f"{gap_name} remains your highest-priority benchmark gap. Building a production capstone will push your profile past 85% alignment.",
-                skills_improved=[gap_name, "System Integration", "CI/CD"],
+                why_now=f"{gap_name} is your highest-priority deficit for {target_role}. Completing this deliverable will directly close a mandatory market benchmark requirement.",
+                skills_improved=[gap_name, f"{target_role} Architecture", "Practical Delivery"],
                 estimated_effort=f"12 hours (~2 weeks at {weekly_hours}h/wk)",
                 impact_summary="+8.0% Alignment Gain • Closes Critical Gap",
-                practical_instruction=f"Build an end-to-end service demonstrating verified proficiency in {gap_name} with automated tests and a documented repository.",
-                verification_deliverable="Public GitHub repo with comprehensive README, setup scripts, and working demo."
+                practical_instruction=f"Build an end-to-end practical deliverable demonstrating verified proficiency in {gap_name} with automated tests and documentation.",
+                verification_deliverable="Public GitHub repository with comprehensive README, setup scripts, and working demo."
             )
 
         # 3. Fallback: Capstone deployment

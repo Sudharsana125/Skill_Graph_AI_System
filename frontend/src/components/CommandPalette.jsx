@@ -22,29 +22,34 @@ export default function CommandPalette({ isOpen, onClose, onSelectAction, onAskA
 
   const suggestions = [
     {
-      title: "What skills do I need for an AI Engineer role?",
-      category: "Career Benchmark",
-      action: () => { onAskAssistant("What are the core skills and benchmarks required for an AI Engineer in 2026?"); onClose(); }
+      title: "What skills am I missing for AI Engineer?",
+      category: "Skill Gaps",
+      action: () => { onAskAssistant("What skills am I missing for AI Engineer?"); onClose(); }
     },
     {
-      title: "Explore Career What-If Simulator",
-      category: "Feature",
-      action: () => { onSelectAction('whatif'); onClose(); }
+      title: "What should I learn next?",
+      category: "Next Best Move",
+      action: () => { onAskAssistant("What should I learn next based on my current SkillGraph?"); onClose(); }
     },
     {
-      title: "Inspect Skill Evidence Graph",
-      category: "Feature",
-      action: () => { onSelectAction('evidence'); onClose(); }
+      title: "Why is my Python level Intermediate?",
+      category: "Evidence Audit",
+      action: () => { onAskAssistant("Why is my Python level evaluated as Intermediate?"); onClose(); }
     },
     {
-      title: "How do my Python skills transfer to Data Analysis?",
-      category: "Skill Transfer",
-      action: () => { onAskAssistant("Explain how my Python foundation transfers into Data Analysis and what learning time is reduced."); onClose(); }
+      title: "What projects would reduce my current skill gaps?",
+      category: "Project Recommendation",
+      action: () => { onAskAssistant("What projects would reduce my current skill gaps?"); onClose(); }
     },
     {
-      title: "View Active Learning Roadmap",
+      title: "What happens if I switch my target to Data Analyst?",
+      category: "Career What-If",
+      action: () => { onAskAssistant("What happens if I switch my target to Data Analyst?"); onClose(); }
+    },
+    {
+      title: "Inspect Interactive SkillGraph",
       category: "Navigation",
-      action: () => { onSelectAction('learning'); onClose(); }
+      action: () => { onSelectAction('twin'); onClose(); }
     }
   ];
 

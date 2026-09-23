@@ -66,10 +66,11 @@ export default function SkillEvolutionTimeline({
         skill_name: scenario.skill_name,
         previous_level: scenario.previous_level,
         new_level: scenario.new_level,
-        confidence_before: scenario.confidence_before,
-        confidence_after: scenario.confidence_after,
-        unlocked_capabilities: scenario.unlocked_capabilities,
-        remaining_gaps: scenario.remaining_gaps
+        previous_confidence: scenario.confidence_before,
+        new_confidence: scenario.confidence_after,
+        unlocked_capabilities: Array.isArray(scenario.unlocked_capabilities) ? scenario.unlocked_capabilities.join(', ') : scenario.unlocked_capabilities,
+        remaining_gaps_count: Array.isArray(scenario.remaining_gaps) ? scenario.remaining_gaps.length : 2,
+        alignment_score_after: 75.0
       });
       setStatusMsg(`Evolved ${scenario.skill_name}: ${scenario.previous_level} → ${scenario.new_level}!`);
       if (onEvolutionLogged) {
@@ -199,9 +200,21 @@ export default function SkillEvolutionTimeline({
             </div>
           ) : (
             sortedTimeline.map((event, index) => {
-              const confBefore = Math.round((event.confidence_before || 0) * 100);
-              const confAfter = Math.round((event.confidence_after || 0) * 100);
+              const confBefore = Math.round(((event.previous_confidence ?? event.confidence_before) || 0) * 100);
+              const confAfter = Math.round(((event.new_confidence ?? event.confidence_after) || 0) * 100);
               const confDelta = confAfter - confBefore;
+
+              const unlockedCaps = Array.isArray(event.unlocked_capabilities)
+                ? event.unlocked_capabilities
+                : (typeof event.unlocked_capabilities === 'string' && event.unlocked_capabilities.length > 0
+                    ? event.unlocked_capabilities.split(',').map(s => s.trim())
+                    : []);
+
+              const remainingGapsList = Array.isArray(event.remaining_gaps)
+                ? event.remaining_gaps
+                : (typeof event.remaining_gaps === 'string' && event.remaining_gaps.length > 0
+                    ? event.remaining_gaps.split(',').map(s => s.trim())
+                    : []);
 
               return (
                 <div 
@@ -327,7 +340,7 @@ export default function SkillEvolutionTimeline({
                   {/* Capabilities & Remaining Gaps */}
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px' }}>
                     {/* Unlocked Capabilities */}
-                    {event.unlocked_capabilities && event.unlocked_capabilities.length > 0 && (
+                    {unlockedCaps.length > 0 && (
                       <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
                           <CheckCircle2 size={14} color="var(--accent-emerald)" />
@@ -336,7 +349,7 @@ export default function SkillEvolutionTimeline({
                           </span>
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                          {event.unlocked_capabilities.map((cap, i) => (
+                          {unlockedCaps.map((cap, i) => (
                             <span 
                               key={i} 
                               style={{ 
@@ -356,7 +369,7 @@ export default function SkillEvolutionTimeline({
                     )}
 
                     {/* Remaining Gaps to Next Tier */}
-                    {event.remaining_gaps && event.remaining_gaps.length > 0 && (
+                    {remainingGapsList.length > 0 && (
                       <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
                           <Sparkles size={14} color="var(--accent-amber)" />
@@ -365,7 +378,7 @@ export default function SkillEvolutionTimeline({
                           </span>
                         </div>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                          {event.remaining_gaps.map((gap, i) => (
+                          {remainingGapsList.map((gap, i) => (
                             <span 
                               key={i} 
                               style={{ 

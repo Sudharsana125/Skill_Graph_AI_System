@@ -63,6 +63,52 @@ CAREER_BENCHMARKS: Dict[str, Dict[str, Any]] = {
         ],
         "market_note": "Based on the selected job data analyzed across 120 verified GenAI Engineer openings."
     },
+    "Agentic AI Architect": {
+        "title": "Agentic AI Architect",
+        "category": "Autonomous Multi-Agent Architecture",
+        "description": "Architects autonomous agent loops, tool-calling schemas, memory stores, and hierarchical multi-agent state machines.",
+        "core_skills": [
+            {"name": "Python", "category": "Programming", "importance": "critical", "target_level": "advanced"},
+            {"name": "AI Agents", "category": "AI / ML", "importance": "critical", "target_level": "advanced"},
+            {"name": "LLMs", "category": "AI / ML", "importance": "critical", "target_level": "advanced"},
+            {"name": "RAG", "category": "AI / ML", "importance": "critical", "target_level": "advanced"},
+            {"name": "FastAPI", "category": "Development", "importance": "critical", "target_level": "intermediate"},
+            {"name": "System Design", "category": "Architecture", "importance": "critical", "target_level": "advanced"},
+            {"name": "Docker", "category": "Development", "importance": "high", "target_level": "intermediate"},
+            {"name": "Vector Databases", "category": "Data", "importance": "high", "target_level": "intermediate"}
+        ],
+        "job_market_frequencies": [
+            {"skill": "Multi-Agent Frameworks (LangGraph)", "frequency": 94, "sample_size": 115},
+            {"skill": "Autonomous Tool Calling", "frequency": 89, "sample_size": 115},
+            {"skill": "Python / Async APIs", "frequency": 92, "sample_size": 115},
+            {"skill": "RAG & Vector Retrieval", "frequency": 86, "sample_size": 115},
+            {"skill": "System Design & Memory", "frequency": 78, "sample_size": 115}
+        ],
+        "market_note": "Based on the selected job data analyzed across 115 verified Agentic Systems openings."
+    },
+    "MLOps Specialist": {
+        "title": "MLOps Specialist",
+        "category": "ML Infrastructure & Operations",
+        "description": "Engineers CI/CD for machine learning, containerized model inference serving, model registries, drift monitoring, and GPU infrastructure.",
+        "core_skills": [
+            {"name": "Docker", "category": "Development", "importance": "critical", "target_level": "advanced"},
+            {"name": "Python", "category": "Programming", "importance": "critical", "target_level": "advanced"},
+            {"name": "MLOps", "category": "Development", "importance": "critical", "target_level": "advanced"},
+            {"name": "Cloud", "category": "Cloud", "importance": "critical", "target_level": "intermediate"},
+            {"name": "APIs", "category": "Development", "importance": "critical", "target_level": "intermediate"},
+            {"name": "Machine Learning", "category": "AI / ML", "importance": "high", "target_level": "intermediate"},
+            {"name": "Git", "category": "Development", "importance": "critical", "target_level": "advanced"},
+            {"name": "System Design", "category": "Architecture", "importance": "high", "target_level": "intermediate"}
+        ],
+        "job_market_frequencies": [
+            {"skill": "Docker & Kubernetes", "frequency": 97, "sample_size": 130},
+            {"skill": "MLOps Pipelines (MLflow/Kubeflow)", "frequency": 91, "sample_size": 130},
+            {"skill": "Python & Shell Scripting", "frequency": 90, "sample_size": 130},
+            {"skill": "CI/CD & GitOps", "frequency": 85, "sample_size": 130},
+            {"skill": "Cloud Deployment", "frequency": 80, "sample_size": 130}
+        ],
+        "market_note": "Based on the selected job data analyzed across 130 verified MLOps Specialist openings."
+    },
     "ML Engineer": {
         "title": "ML Engineer",
         "category": "Machine Learning & MLOps",

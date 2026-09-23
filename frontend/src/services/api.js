@@ -197,3 +197,54 @@ export async function logEvolutionEvent(userId, eventData) {
   }
   return res.json();
 }
+
+export async function liveAddSkill(userId, skillData) {
+  const res = await fetch(`${API_BASE}/api/profile/add-skill`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      user_id: userId,
+      name: skillData.name,
+      category: skillData.category || "General",
+      level: skillData.level || "Intermediate",
+      learning_source: skillData.learning_source || "Live Real-Time Input"
+    })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || 'Adding live skill failed');
+  }
+  return res.json();
+}
+
+export async function liveSwitchRole(userId, newRole) {
+  const res = await fetch(`${API_BASE}/api/profile/switch-role`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      user_id: userId,
+      target_role: newRole
+    })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || 'Switching target role failed');
+  }
+  return res.json();
+}
+
+export async function liveAddProject(userId, projectData) {
+  const res = await fetch(`${API_BASE}/api/profile/add-project`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      user_id: userId,
+      ...projectData
+    })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || 'Adding live project failed');
+  }
+  return res.json();
+}
